@@ -1,0 +1,87 @@
+	if(ForkRoad_Enable)
+	{
+		tnow++;
+		if(Inductance3<InFork_Inductance_mid+250 && Inductance2<InFork_Inductance_mid+250 
+			&& Inductance3>InFork_Inductance_mid && Inductance2>InFork_Inductance_mid 
+			&& Inductance1>InFork_Inductance_left && Inductance4>InFork_Inductance_right
+			&& ForkRoad_Flag1 && tnow>InFork_time)
+		{
+	
+			yaw1 = gyroscope.euler.yaw;	//记录当前转向角的值
+			if(ForkRoad_ToRight)
+			{
+				if(yaw1 > 130)
+				{
+					yaw1-=310;
+				}
+				else
+				{
+					yaw1+=50;
+				}
+				AddError_Right = 1;
+				AddError_Left = 0;
+			}
+			if(ForkRoad_ToLeft)
+			{
+				if(yaw1 < -150)
+				{
+					yaw1 += 330;
+				}
+				else
+				{
+					yaw1 -= 30;
+				}
+				AddError_Left = 1;
+				AddError_Right = 0;
+			}
+			Turn_Kp = uint32_conversion_float(read_buf[24])/2;
+			Elec_factor = InFork_factor;
+			ForkRoad_Flag1 = 0;
+			ForkRoad_Flag2 = 1;
+		}
+		
+		if(ForkRoad_Flag2)
+		{
+			Beep_Start();		
+			if((gyroscope.euler.yaw > yaw1-5) && (gyroscope.euler.yaw < yaw1+5))	
+			{
+				ForkRoad_Flag2 = 0;
+				ForkRoad_Flag3 = 1;
+				
+				AddError_Right = 0;
+				AddError_Left = 0;
+			}			
+		}
+		
+		if(ForkRoad_Flag3)
+		{
+			CarSpeed_Set = read_buf[0];
+			FallReady_time++;
+			if(FallReady_time > Fall_time)
+			{
+				seekfree_wireless_send_buff(Tx_buff, sizeof(uint8)*4);
+				seekfree_wireless_send_buff(Tx_buff, sizeof(uint8)*4);
+				seekfree_wireless_send_buff(Tx_buff, sizeof(uint8)*4);
+				seekfree_wireless_send_buff(Tx_buff, sizeof(uint8)*4);
+				seekfree_wireless_send_buff(Tx_buff, sizeof(uint8)*4);
+				uart_putbuff(Blueteeth_UART, Tx_buff, sizeof(uint8)*4);
+				uart_putbuff(Blueteeth_UART, Tx_buff, sizeof(uint8)*4);
+				uart_putbuff(Blueteeth_UART, Tx_buff, sizeof(uint8)*4);
+				uart_putbuff(Blueteeth_UART, Tx_buff, sizeof(uint8)*4);
+				uart_putbuff(Blueteeth_UART, Tx_buff, sizeof(uint8)*4);
+			
+				Stop_Flag=1;
+				Stand_Enable = 0;
+				Turn_Out=0;
+				Set_PWM(-8000,-8000);
+				Beep_Start();		
+				systick_delay_ms(400);
+				Set_PWM(0,0);
+				
+				ForkRoad_Flag3 = 0;				
+				ForkRoad_Enable = 0;
+				getball_start_flag = 0;
+				Turn_Kp = uint32_conversion_float(read_buf[24]);
+			}
+		}
+	}

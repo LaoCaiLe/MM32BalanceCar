@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "car_task.h": "c",
+        "hash_map": "cpp",
+        "map": "cpp",
+        "unordered_map": "cpp",
+        "vl53l0.h": "c",
+        "oled.h": "c",
+        "car_image.h": "c"
+    }
+}
