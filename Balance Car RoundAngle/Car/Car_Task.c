@@ -196,33 +196,6 @@ void task_10ms(void)
 		if(InRound_Flag2 /*&& Inductance1<580 && Inductance1>300*/)
 		{	
 			yaw1 = gyroscope.euler.yaw;	//记录当前转向角的值
-			// if(InRound_ToRight)
-			// {
-			// 	if(yaw1 > 120)
-			// 	{
-			// 		yaw1-=300;
-			// 	}
-			// 	else
-			// 	{
-			// 		yaw1+=60;
-			// 	}
-			// 	AddError_Left = 0;
-			// 	AddError_Right = 1;
-			// }
-			// if(InRound_ToLeft)
-			// {
-			// 	if(yaw1 < -120)
-			// 	{
-			// 		yaw1 += 300;
-			// 	}
-			// 	else
-			// 	{
-			// 		yaw1 -= 60;
-			// 	}
-			// 	AddError_Left = 1;
-			// 	AddError_Right = 0;
-				
-			// }
 			if(InRound_ToRight)
 			{
 				if(yaw1 > (180 - InRound_Angle))
