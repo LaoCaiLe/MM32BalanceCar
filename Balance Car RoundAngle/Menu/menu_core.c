@@ -18,7 +18,7 @@ struct MainMenu * MenuItem;
 struct MainMenu * Last_MenuItem;
 struct SubMenu * psMenuItem;
 
-int menu_Index=0; 
+int menu_Index=0; //鑿滃崟涓嬫爣
 int Last_menu_Index = 0;
 
 char dis_buff[50]={0}; //字符串缓冲区
